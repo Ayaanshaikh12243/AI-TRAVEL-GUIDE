@@ -1,0 +1,66 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    margin-bottom: 2rem;
+}
+
+/* Loading Spinner for New Itinerary Form */
+#loading-spinner {
+    display: none; /* Hidden by default */
+    text-align: center;
+    padding: 40px;
+}
+
+#loading-spinner .spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Itinerary Show Page Timeline/Plan */
+.day-plan {
+    margin-top: 1.5rem;
+}
+
+.plan-item {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem; /* row-gap column-gap */
+}
+.plan-item:last-child {
+    border-bottom: none;
+}
+.plan-time {
+    font-weight: bold;
+    color: #0d6efd; /* Bootstrap primary */
+    flex-basis: 100px; /* Min width for time */
+}
+.plan-place {
+    font-weight: 600;
+    flex-grow: 1;
+    flex-basis: 200px;
+}
+.plan-activity {
+    color: #555;
+    flex-grow: 2;
+    flex-basis: 300px;
+}
+.plan-details {
+    flex-basis: 100%;
+    font-size: 0.9em;
+    color: #6c757d; /* Bootstrap secondary */
+}
+
+/* AI Reasoning Box */
+.ai-reasoning {
+    background-color: #eef7ff;
+    border: 1px solid #cce0ff;
+    border-radius: 0.25rem;
+}
+.ai-reasoning-title {
+    font-weight: bold;
+    color: #004a99;
+}

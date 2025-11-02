@@ -1,0 +1,120 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/"><i class="bi bi-compass"></i> AI Travel Guide</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <% if(currentUser) { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/itineraries">My Trips</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#newTripModal">New Trip</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="/suggestions">Suggestions</a>
+                    </li>
+                <% } %>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                 <% if(!currentUser) { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register">Register</a>
+                    </li>
+                <% } else { %>
+                    <li class="nav-item">
+                         <span class="navbar-text me-3">
+                            Signed in as <strong><%= currentUser.username %></strong>
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout <i class="bi bi-box-arrow-right"></i></a>
+                    </li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- New Trip Modal -->
+<div class="modal fade" id="newTripModal" tabindex="-1" aria-labelledby="newTripModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="newTripModalLabel">Plan Your Next Adventure</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="modal-loading" class="text-center my-4" style="display:none;">
+          <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+          <div class="mt-2 text-muted">AI is crafting your perfect trip...</div>
+        </div>
+        <form id="newTripForm">
+          <div class="row g-3">
+            <div class="col-md-12">
+              <label for="destination" class="form-label">Destination</label>
+              <input type="text" class="form-control" id="destination" name="destination" placeholder="e.g., Tokyo, Japan" required>
+              <div class="invalid-feedback">Please enter a destination.</div>
+            </div>
+            <div class="col-md-6">
+              <label for="startDate" class="form-label">Start Date</label>
+              <input type="date" class="form-control" id="startDate" name="startDate" required>
+              <div class="invalid-feedback">Please select a start date.</div>
+            </div>
+            <div class="col-md-6">
+              <label for="endDate" class="form-label">End Date</label>
+              <input type="date" class="form-control" id="endDate" name="endDate" required>
+              <div class="invalid-feedback">Please select an end date.</div>
+            </div>
+            <div class="col-md-12">
+              <label for="interests" class="form-label">Interests (comma-separated)</label>
+              <input type="text" class="form-control" id="interests" name="interests" placeholder="e.g., Food, History, Museums" required>
+            </div>
+            <div class="col-md-4">
+              <label for="travelStyle" class="form-label">Travel Style</label>
+              <select class="form-select" id="travelStyle" name="travelStyle" required>
+                <option value="Budget">Budget</option>
+                <option value="Mid-range" selected>Mid-range</option>
+                <option value="Luxury">Luxury</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="pace" class="form-label">Pace</label>
+              <select class="form-select" id="pace" name="pace" required>
+                <option value="Relaxed">Relaxed</option>
+                <option value="Moderate" selected>Moderate</option>
+                <option value="Fast-paced">Fast-paced</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="budget" class="form-label">Approximate Budget (Total)</label>
+              <input type="text" class="form-control" id="budget" name="budget" placeholder="e.g., 1000 USD or ₹80,000" required>
+            </div>
+            <div class="col-md-4">
+              <label for="currency" class="form-label">Currency</label>
+              <select class="form-select" id="currency" name="currency" required>
+                <option value="USD" selected>USD</option>
+                <option value="EUR">EUR</option>
+                <option value="INR">INR</option>
+                <option value="GBP">GBP</option>
+                <option value="JPY">JPY</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="submitNewTrip" class="btn btn-primary">Generate My Trip</button>
+      </div>
+    </div>
+  </div>
+</div>

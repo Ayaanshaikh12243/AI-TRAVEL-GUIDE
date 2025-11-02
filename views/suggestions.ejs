@@ -1,0 +1,51 @@
+<%- include('partials/header') %>
+
+<h1 class="mb-2">AI Trip Suggestions 💡</h1>
+<p class="text-muted mb-4">Discover 10 handpicked destinations with quick highlights.</p>
+
+<% const heroQuery = (suggestions && suggestions[0] && suggestions[0].name) ? suggestions[0].name : 'world travel'; %>
+<div class="card border-0 shadow-sm mb-4 overflow-hidden">
+  <img src="https://source.unsplash.com/featured/1200x360/?<%= encodeURIComponent(heroQuery) %>"
+       alt="Travel inspiration"
+       class="w-100"
+       style="height: 260px; object-fit: cover;"
+       loading="lazy"
+       data-fallback="https://picsum.photos/seed/<%= encodeURIComponent(heroQuery) %>/1200/360"
+       onerror="if(this.dataset.fallback && !this.dataset.tried){this.dataset.tried=1;this.src=this.dataset.fallback;}else{this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'1200\' height=\'360\'><rect width=\'100%\' height=\'100%\' fill=\'%23e9ecef\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23777\' font-family=\'Arial\' font-size=\'28\'>Travel inspiration</text></svg>';}">
+  </div>
+
+<% if(suggestions.length === 0) { %>
+  <div class="alert alert-warning" role="alert">
+    Could not load AI suggestions at this time. Please try again later.
+  </div>
+<% } else { %>
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <% suggestions.forEach(dest => { %>
+      <div class="col">
+        <a href="https://www.google.com/search?q=<%= encodeURIComponent(dest.name) %>" target="_blank" rel="noopener" class="text-decoration-none text-reset">
+          <div class="card h-100 shadow-sm border-0 overflow-hidden">
+            <img src="<%= dest.imageUrl %>"
+                 class="card-img-top"
+                 alt="<%= dest.name %>"
+                 style="height:220px; object-fit: cover;"
+                 loading="lazy"
+                 data-fallback="<%= dest.fallbackUrl %>"
+                 onerror="if(this.dataset.fallback && !this.dataset.tried){this.dataset.tried=1;this.src=this.dataset.fallback;}else{this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'600\' height=\'400\'><rect width=\'100%\' height=\'100%\' fill=\'%23e9ecef\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23777\' font-family=\'Arial\' font-size=\'20\'>Image unavailable</text></svg>';}">
+            <div class="card-body">
+              <h5 class="card-title d-flex align-items-start gap-2">
+                <i class="bi bi-geo-alt-fill text-danger"></i>
+                <span><%= dest.name %></span>
+              </h5>
+              <p class="card-text mb-2"><%= dest.highlights %></p>
+              <% if (dest.bestTime) { %>
+                <span class="badge text-bg-light border"><i class="bi bi-calendar-check me-1"></i><%= dest.bestTime %></span>
+              <% } %>
+            </div>
+          </div>
+        </a>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('partials/footer') %>

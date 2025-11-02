@@ -1,0 +1,22 @@
+<%- include('partials/header') %>
+
+<div class="px-4 py-5 my-5 text-center">
+    
+    <h1 class="display-5 fw-bold text-body-emphasis">Your Personal AI Travel Planner</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4">
+        Stop guessing, start exploring. Provide your destination, interests, and budget, and let our AI craft a perfect, personalized day-by-day itinerary just for you.
+      </p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <% if(!currentUser) { %>
+            <a href="/register" class="btn btn-primary btn-lg px-4 gap-3">Get Started</a>
+            <a href="/login" class="btn btn-outline-secondary btn-lg px-4">Login</a>
+        <% } else { %>
+             <a href="/itineraries/new" class="btn btn-primary btn-lg px-4 gap-3">Plan a New Trip <i class="bi bi-magic"></i></a>
+             <a href="/itineraries" class="btn btn-outline-secondary btn-lg px-4">View My Trips</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+<%- include('partials/footer') %>
