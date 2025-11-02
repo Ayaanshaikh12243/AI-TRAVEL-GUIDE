@@ -17,10 +17,41 @@ const indexRoutes = require('./routes/index');
 const itineraryRoutes = require('./routes/itineraries');
 const suggestionRoutes = require('./routes/suggestions');
 
-// Connect to MongoDB
-mongoose.connect(process.env.DB_URL)
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('MongoDB connection error:', err));
+// Connect to MongoDB (primary -> fallback to local)
+function sanitizeEnv(v) {
+    if (!v || typeof v !== 'string') return v;
+    // trim, drop trailing semicolons, and surrounding quotes
+    return v.trim().replace(/;+\s*$/,'').replace(/^"|"$/g, '').replace(/^'|'$/g,'');
+}
+
+const primaryUri = sanitizeEnv(process.env.DB_URL) || sanitizeEnv(process.env.MONGODB_URI);
+const localUri = 'mongodb://127.0.0.1:27017/aiTravelGuide';
+
+async function connectMongo() {
+    const uriToUse = primaryUri || localUri;
+    try {
+        await mongoose.connect(uriToUse, { serverSelectionTimeoutMS: 10000, family: 4 });
+        console.log('Connected to MongoDB');
+    } catch (err) {
+        console.error('MongoDB connection error (primary):', err && err.message ? err.message : err);
+        if (uriToUse !== localUri) {
+            console.log('Trying local MongoDB fallback at', localUri);
+            try {
+                await mongoose.connect(localUri, { serverSelectionTimeoutMS: 10000, family: 4 });
+                console.log('Connected to local MongoDB');
+                return;
+            } catch (e2) {
+                console.error('MongoDB connection error (local fallback):', e2 && e2.message ? e2.message : e2);
+            }
+        }
+        // Re-throw to surface failure during startup
+        throw err;
+    }
+}
+
+connectMongo().catch(() => {
+    // keep process alive; routes may still render error pages
+});
 
 const app = express();
 
@@ -40,7 +71,7 @@ const sessionConfig = {
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
-        // secure: true, // Enable in production (HTTPS)
+      
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
